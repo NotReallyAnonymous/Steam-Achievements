@@ -13,6 +13,9 @@ createApp({
       alerted: new Set(),
       shiftLengthMs: 8 * 60 * 60 * 1000,
       achievementSoundUrl: 'https://www.myinstants.com/media/sounds/steam-achievement.mp3',
+      achievementQueue: [],
+      isProcessingQueue: false,
+      queueDelayMs: 1250,
     };
   },
   computed: {
@@ -47,6 +50,7 @@ createApp({
     },
     mainAchievement() {
       return {
+        id: 'main',
         title: 'Workhorse: Complete Your 8-Hour Shift',
         description: 'Finish your full 2:30 PM – 10:30 PM EST shift.',
         unlocked: this.progressPercent >= 100,
@@ -90,25 +94,40 @@ createApp({
         new Notification('Achievement Unlocked', { body: text });
       }
     },
+    queueAchievement(achievement) {
+      this.achievementQueue.push(achievement);
+      this.processAchievementQueue();
+    },
+    processAchievementQueue() {
+      if (this.isProcessingQueue || this.achievementQueue.length === 0) return;
+
+      this.isProcessingQueue = true;
+      const nextAchievement = this.achievementQueue.shift();
+      this.playAchievementSound();
+      this.notify(`${nextAchievement.title} unlocked!`);
+
+      setTimeout(() => {
+        this.isProcessingQueue = false;
+        this.processAchievementQueue();
+      }, this.queueDelayMs);
+    },
     evaluateAchievements() {
       const elapsedMins = this.elapsedMs / 60000;
 
       this.milestones.forEach((achievement) => {
         if (!achievement.unlocked && elapsedMins >= achievement.thresholdMinutes) {
           achievement.unlocked = true;
-          const key = achievement.id;
-          if (!this.alerted.has(key)) {
-            this.alerted.add(key);
-            this.playAchievementSound();
-            this.notify(`${achievement.title} unlocked!`);
-          }
+        }
+
+        if (achievement.unlocked && !this.alerted.has(achievement.id)) {
+          this.alerted.add(achievement.id);
+          this.queueAchievement(achievement);
         }
       });
 
-      if (this.mainAchievement.unlocked && !this.alerted.has('main')) {
-        this.alerted.add('main');
-        this.playAchievementSound();
-        this.notify(`${this.mainAchievement.title} unlocked!`);
+      if (this.mainAchievement.unlocked && !this.alerted.has(this.mainAchievement.id)) {
+        this.alerted.add(this.mainAchievement.id);
+        this.queueAchievement(this.mainAchievement);
       }
     },
   },
