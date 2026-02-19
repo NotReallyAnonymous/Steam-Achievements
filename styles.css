@@ -1,0 +1,96 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f141b;
+  --panel: #1b2838;
+  --panel-highlight: #223a54;
+  --text: #c7d5e0;
+  --muted: #7a8b9d;
+  --glow: #66c0f4;
+  --unlock: #8bc53f;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at top, #1f2f45, var(--bg));
+  color: var(--text);
+}
+
+.app {
+  max-width: 860px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+header h1 { margin-bottom: 0.4rem; }
+header p { margin-top: 0; color: var(--muted); }
+
+.achievement {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background: linear-gradient(180deg, var(--panel-highlight), var(--panel));
+  border: 1px solid #2b475f;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.achievement.main { grid-template-columns: 88px 1fr; }
+.achievement.main img {
+  width: 72px;
+  height: 72px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.icon { font-size: 1.6rem; }
+
+.progress-shell {
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background: #111923;
+  border: 1px solid #3c5d7c;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4a9bd3, var(--glow));
+  width: 0;
+  transition: width 0.8s linear;
+}
+
+.meta { color: var(--muted); margin: 0.4rem 0 0; }
+
+.stamp {
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.unlocked {
+  border-color: #6ea930;
+  box-shadow: 0 0 0 1px rgba(139, 197, 63, 0.35), 0 0 14px rgba(139, 197, 63, 0.18);
+}
+
+.unlocked .stamp,
+.unlocked h2,
+.unlocked h3 { color: var(--unlock); }
+
+.notify-btn {
+  margin-top: 1rem;
+  background: #66c0f4;
+  border: 0;
+  color: #0d1b2a;
+  font-weight: 700;
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+[v-cloak] { display: none; }
