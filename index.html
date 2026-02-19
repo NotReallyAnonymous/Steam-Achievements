@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shift Achievements</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div id="app" class="app" v-cloak>
+      <header>
+        <h1>Steam Shift Achievements</h1>
+        <p>Daily shift: 2:30 PM – 10:30 PM EST</p>
+      </header>
+
+      <section class="achievement main" :class="{ unlocked: mainAchievement.unlocked }">
+        <img src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/753/6f6f2f519fd6aa1664e9ea0f7dd8e5f8f6dc3bd5.jpg" alt="Main badge" />
+        <div>
+          <h2>{{ mainAchievement.title }}</h2>
+          <p>{{ mainAchievement.description }}</p>
+          <div class="progress-shell">
+            <div class="progress-bar" :style="{ width: `${progressPercent}%` }"></div>
+          </div>
+          <p class="meta">{{ elapsedLabel }} / 8:00:00 • {{ progressPercent.toFixed(2) }}%</p>
+          <p class="meta">{{ statusText }}</p>
+        </div>
+      </section>
+
+      <section class="sub-achievements">
+        <article class="achievement" v-for="achievement in milestones" :key="achievement.id" :class="{ unlocked: achievement.unlocked }">
+          <div class="icon">🏆</div>
+          <div>
+            <h3>{{ achievement.title }}</h3>
+            <p>{{ achievement.description }}</p>
+          </div>
+          <span class="stamp">{{ achievement.unlocked ? 'Unlocked' : 'Locked' }}</span>
+        </article>
+      </section>
+
+      <button class="notify-btn" @click="requestNotifications">Enable Notifications</button>
+    </div>
+  </body>
+</html>
